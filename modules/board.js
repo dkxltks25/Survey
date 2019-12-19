@@ -29,42 +29,64 @@ const selectBoard = () =>{
 //설문지 클릭 이벤트
 const clickSurvey = (event) =>{
     const {target} = event;
-    addSurveyBoardItem();
 }
 
 //설문지 아이템 영역 추가
 const addSurveyBoardItem = () =>{
     const SurveyBoardItem = document.createElement("div");
     SurveyBoardItem.classList.add("SurveyBoardItem");
+    SurveyBoardItem.setAttribute("data-state",false);
 
     //SurveyBoardItem 스타일 삭제
     SurveyBoardItem.style.width ="100px";
     SurveyBoardItem.style.height = "100px";
 
-    SurveyBoardItem.addEventListener('click',clickSurveyBoardItem);
-    //보드 조회
+    SurveyBoardItem.addEventListener('click',clickToggleSurveyBoardItem);
+    
     const SurveyBoard = selectBoard();
     SurveyBoard.appendChild(SurveyBoardItem);
+    console.log("설문지 아이템이 생성되었습니다");
 };
 // 설문지 아이템 영역 삭제 
-const deleteSurveyBoardItem = ({})=>{
-}
+const deleteSurveyBoardItem = (event)=>{
+    const SurveyBoardItem = document.querySelectorAll(".SurveyItem--toggle--Checked");
+    console.log(SurveyBoardItem);
+}   
 
 //설문지 아이템 클릭 이벤트
-
-const clickSurveyBoardItem = (evnet)=>{
+const clickToggleSurveyBoardItem = (event)=>{
+    //클릭시 선택
+    const SurveyItems = document.querySelectorAll(".SurveyBoardItem");
+    //모든 SurveyItems의 data-state의 값을 false로 바꾸어 줍니다.
+    //SurveyItemsd의 class를 추가합니다. toggleChecked
+    
+    window.addEventListener('keydown',(event)=>{
+        const {which} = event;
+        if(which === 18){
+            //복수 선택모드
+        }
+    })
+    for(let i = 0; i<SurveyItems.length;i++){
+        SurveyItems[i].classList.remove("SurveyItem--toggle--Checked");
+    }
     const {target} = event;
-    console.dir(target);
+    target.classList.add("SurveyItem--toggle--Checked");
 }
-
 /* </설문지 영역> */
 
+/*테스트 버튼 영역 */
+const setTest = () =>{
+    const [addButton,deleteButton] = document.querySelectorAll(".Test");
+    addButton.addEventListener('click',addSurveyBoardItem);
+    deleteButton.addEventListener('click',deleteSurveyBoardItem);
+}
 
 //초기화
 
 const init = () =>{
     setSurvey();
-    
+    setTest();
+
 
 }
 window.onload = init;
