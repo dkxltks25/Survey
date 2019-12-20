@@ -1,0 +1,11 @@
+/*
+    Survey의 모든 css를 관리하는 파일입니다.
+    
+*/
+
+/*메인*/
+
+.index__Contanier_wrap{
+    width:1200px;
+    margin:0px auto;
+}
