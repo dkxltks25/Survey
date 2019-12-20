@@ -5,13 +5,26 @@
 
 /*메인*/
 .index__Contanier_wrap{
-    width:1200px;
-    margin:0px auto;
+    
+    width:1200PX;
+    margin:20px auto;
 }
 
 .index__Container{
-    width:100%;
+    width:85%;
     margin:0px auto;
+}
+.SurveyTitle{
+    width:85%;
+    margin:0px auto;
+}
+.SurveyItem{
+    width:85%;
+    margin:0px auto;
+}
+
+.SurveyItemTools{
+    float:right;
 }
 /*푸터*/
 .page-footer{
@@ -19,3 +32,4 @@
     position: fixed;
     bottom:0;
 }
+
