@@ -4,8 +4,18 @@
 */
 
 /*메인*/
-
 .index__Contanier_wrap{
     width:1200px;
     margin:0px auto;
+}
+
+.index__Container{
+    width:100%;
+    margin:0px auto;
+}
+/*푸터*/
+.page-footer{
+    width:100%;
+    position: fixed;
+    bottom:0;
 }
