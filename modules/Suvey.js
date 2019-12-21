@@ -42,19 +42,16 @@ Survey.prototype.createSurveyTitle = function(){
     this.Survey.appendChild(SurveyTitle);
     
 }
-//항목 생성
-Survey.prototype.createSurveyItem = function(event,ReduceSurvey){
-  
-}   
+
 //항목 관리 도구
 Survey.prototype.createSurveyTools = function(){
     const SurveyTools = createDivTag([this.SurveyItemsTools,this.MaterialPanel]);
-    //항목 관리 도구 Item 추기
-    const ReduceSurvey= this;
+    //항목 관리 도구 Item 추가
     const IconAddButton = createIconButton(this.ButtonIconAddName,this.IconAddName);
     IconAddButton.addEventListener('click',()=>{
-        const SurveyItem = createDivTag([ReduceSurvey.SurveyItemName,ReduceSurvey.MaterialPanel]);
+        const SurveyItem = createDivTag([this.SurveyItemName,this.MaterialPanel]);
         this.Survey.appendChild(SurveyItem);
+        SurveyItem.addEventListener('click',clickSurveyItem);
     });
 
     SurveyTools.appendChild(IconAddButton); 
@@ -62,8 +59,10 @@ Survey.prototype.createSurveyTools = function(){
 
 
 }
-
-
+//이벤트 영역
+const clickSurveyItem = (event)=>{
+    
+}
 // 공통 태그 생성 영역
 const createDivTag = (divName) =>{
     const DivTag = document.createElement("div");
