@@ -23,6 +23,8 @@ function Survey (container){
     this.ButtonIconAddName = "IconAdddButton";
     this.IconCopyName = "content_copy";
     this.ButtonIconCopyName = "IconCopyButton";
+    this.IconDeleteName = "delete";
+    this.ButtonIconDeleteName = "IconDeleteButton";
     
     //아이콘 상태
     this.IconButtonState = "btn-floating"; 
@@ -77,40 +79,60 @@ Survey.prototype.createSurveyTools = function(){
         SurveyItemTopDiv.appendChild(SurveyItemTitleDiv);
         SurveyItem.appendChild(SurveyItemTopDiv);
 
-        this.Survey.appendChild(SurveyItem);
         
         //아이템 하단 기능
         const SurveyItemBottomDiv =createDivTag([this.SurveyItemBottomName]);
         //복사
-        const SurveyItemCopy = createIconButton(this.ButtonIconCopyName,this.IconCopyName,null);
+        const SurveyItemCopy = createIconButton(this.ButtonIconCopyName,this.IconCopyName,this.IconButtonState);
+        SurveyItemCopy.addEventListener('click',()=>{
+            this.Survey.appendChild(SurveyItem);
+            console.log(this.Survey);
+
+        })
         //삭제
-        //const SurveyItemDelete = createIconButton("","",null);      
+        const SurveyItemDelete = createIconButton(this.ButtonIconDeleteName,this.IconDeleteName,this.IconButtonState);      
+        SurveyItemDelete.addEventListener('click',(evnet)=>{
+            SurveyItem.remove();
+        }) 
         //필수
         //const SurveyItemNeed = createIconButton("","",null);
         //.3개
         //const SurveyItemOption = createIconButton("","",null);
         //Select init 
-
-        SurveyItemBottomDiv.appendChild(SurveyItemCopy);
-        const elems = document.querySelectorAll('select');
         
+        SurveyItem.appendChild(SurveyItemBottomDiv);
+        this.Survey.appendChild(SurveyItem);
+        
+        SurveyItemBottomDiv.appendChild(SurveyItemCopy);
+        SurveyItemBottomDiv.appendChild(SurveyItemDelete);
+        
+        const elems = document.querySelectorAll('select');
         const instances = M.FormSelect.init(elems);
-        console.log(instances);
+        //SurveyItem click
+        SurveyItem.addEventListener('click',()=>{
+            const SurveyItemFocus = document.querySelector(".SurveyItem-focus");
+            console.log(SurveyItemFocus);
+            if(SurveyItemFocus !== null){
+                SurveyItemFocus.classList.remove("SurveyItem-focus");
+            }
+            SurveyItem.classList.add("SurveyItem-focus");
+            const Tool = document.querySelector(`.${this.SurveyItemsTools}`);
+            const clientRect = SurveyItem.getBoundingClientRect(); // DomRect 구하기 (각종 좌표값이 들어있는 객체)
+            const relativeTop = clientRect.top;
+            const scrolledTopLength = window.pageYOffset; // 스크롤된 길이
+            const absoluteTop = scrolledTopLength + relativeTop; // 절대좌표
+
+            Tool.setAttribute("style",`top:${absoluteTop-291}px`);
+        }); 
         if(instances !== null){
             instances.getSelectedValues();
-
         }
-        SurveyItem.addEventListener('click',clickSurveyItem);
     });
     SurveyTools.appendChild(IconAddButton);
     this.Survey.appendChild(SurveyTools);
     
     
 
-}
-//이벤트 영역
-const clickSurveyItem = (event)=>{
-    
 }
 // 공통 태그 생성 영역
 const createDivTag = (divName) =>{
@@ -122,6 +144,7 @@ const createIconButton = (IconButtonName,IconText,IconState=null)=>{
     //IconState가 floating 버튼을 원하는 경우
     const IconName = "material-icons";
     const IconButton = document.createElement("button");
+    IconButton.classList.add("Button-border-outline");    
     IconButton.classList.add(IconButtonName);
     IconState === null ? "" : IconButton.classList.add(IconState);
     const Icon = document.createElement("i");
@@ -159,6 +182,10 @@ const createSelectTag = (SelectName,ListName) =>{
         SelectTag.classList.add(index);
     })
     return SelectTag;
+}
+
+const calculatePoistion = ()=>{
+
 }
 // 제일 처음 실행어야 하는 함수
 Survey.prototype.createSurvey = function(){

@@ -27,6 +27,22 @@
     float:right;
 }
 
+
+/*아이콘 버튼 효과 제외*/
+.Button-border-outline{
+    background-color:white;
+}
+
+/*SurveyItem click*/
+.SurveyItem-focus{
+    border:1px solid blue;
+}
+
+/*SurveyItemTools 위치*/
+.SurveyItemTools{
+    position: relative;
+    transition: 0.3s;
+}
 /*푸터*/
 .page-footer{
     width:100%;
