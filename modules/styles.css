@@ -26,6 +26,7 @@
 .SurveyItemTools{
     float:right;
 }
+
 /*푸터*/
 .page-footer{
     width:100%;
@@ -33,3 +34,7 @@
     bottom:0;
 }
 
+
+select{
+    display:inline;
+}
