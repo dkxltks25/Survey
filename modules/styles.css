@@ -37,12 +37,16 @@
 .SurveyItem-focus{
     border:1px solid blue;
 }
-
+.SurveyItem-unfocus > .SurveyItemBottom{
+    visibility: hidden;
+    height:0px;
+}
 /*SurveyItemTools 위치*/
 .SurveyItemTools{
     position: relative;
     transition: 0.3s;
 }
+
 /*푸터*/
 .page-footer{
     width:100%;

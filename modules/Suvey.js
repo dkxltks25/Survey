@@ -9,7 +9,7 @@ function Survey (container){
     this.SurveyItemTitleName = "SurveyItemTitle";
     this.SurveyItemSelectName = "SurveyItemSelect";
 
-    this.SurveyItemBottomName = "SurveyItemBottomName";
+    this.SurveyItemBottomName = "SurveyItemBottom";
     this.SurveyItemsTools = "SurveyItemTools";
     this.SurveyItemSubjectName = "";
     this.SurveyItemContentName = "";
@@ -65,7 +65,7 @@ Survey.prototype.createSurveyTools = function(){
     //항목 관리 도구 Item 추가
     const IconAddButton = createIconButton(this.ButtonIconAddName,this.IconAddName,this.IconButtonState);
     IconAddButton.addEventListener('click',()=>{
-        const SurveyItem = createDivTag([this.SurveyItemName,this.MaterialPanel]);
+        const SurveyItem = createDivTag([this.SurveyItemName,this.MaterialPanel,"SurveyItem-unfocus"]);
 
         
         const SurveyItemTopDiv = createDivTag([this.SurveyItemTopName]);
@@ -114,19 +114,23 @@ Survey.prototype.createSurveyTools = function(){
             console.log(SurveyItemFocus);
             if(SurveyItemFocus !== null){
                 SurveyItemFocus.classList.remove("SurveyItem-focus");
+                SurveyItemFocus.classList.add("SurveyItem-unfocus");
             }
+            SurveyItem.classList.remove("SurveyItem-unfocus");
             SurveyItem.classList.add("SurveyItem-focus");
             const Tool = document.querySelector(`.${this.SurveyItemsTools}`);
             const clientRect = SurveyItem.getBoundingClientRect(); // DomRect 구하기 (각종 좌표값이 들어있는 객체)
             const relativeTop = clientRect.top;
             const scrolledTopLength = window.pageYOffset; // 스크롤된 길이
             const absoluteTop = scrolledTopLength + relativeTop; // 절대좌표
-
-            Tool.setAttribute("style",`top:${absoluteTop-291}px`);
+            const calculate = (absoluteTop - 291) <= 0 ? 0 : absoluteTop-291;
+        
+            Tool.setAttribute("style",`top:${calculate}px`);
         }); 
         if(instances !== null){
             instances.getSelectedValues();
         }
+        SurveyItem.addEventListener('move',()=>alert(1));
     });
     SurveyTools.appendChild(IconAddButton);
     this.Survey.appendChild(SurveyTools);
