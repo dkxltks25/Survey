@@ -75,11 +75,13 @@ Survey.prototype.createSurveyTools = function(){
         const SurveySelectOption = createSelectTag([this.SurveyItemSelectName],this.SelectOptionText);
         SurveyItemTitleDiv.appendChild(SurveyItemTitle);
         SurveySelectDiv.appendChild(SurveySelectOption);
-        SurveyItemTopDiv.appendChild(SurveySelectDiv);
         SurveyItemTopDiv.appendChild(SurveyItemTitleDiv);
+        SurveyItemTopDiv.appendChild(SurveySelectDiv);
         SurveyItem.appendChild(SurveyItemTopDiv);
 
         
+        
+        console.dir(SurveySelectOption);
         //아이템 하단 기능
         const SurveyItemBottomDiv =createDivTag([this.SurveyItemBottomName]);
         //복사
@@ -109,9 +111,9 @@ Survey.prototype.createSurveyTools = function(){
         const elems = document.querySelectorAll('select');
         const instances = M.FormSelect.init(elems);
         //SurveyItem click
+        
         SurveyItem.addEventListener('click',()=>{
             const SurveyItemFocus = document.querySelector(".SurveyItem-focus");
-            console.log(SurveyItemFocus);
             if(SurveyItemFocus !== null){
                 SurveyItemFocus.classList.remove("SurveyItem-focus");
                 SurveyItemFocus.classList.add("SurveyItem-unfocus");
@@ -128,8 +130,9 @@ Survey.prototype.createSurveyTools = function(){
             Tool.setAttribute("style",`top:${calculate}px`);
         }); 
         if(instances !== null){
-            instances.getSelectedValues();
+            instance.getSelectedValues();
         }
+        console.log(instances);
         SurveyItem.addEventListener('move',()=>alert(1));
     });
     SurveyTools.appendChild(IconAddButton);
@@ -177,8 +180,9 @@ const createTextArea = (TextAreaName,placeholder) =>{
 const createSelectTag = (SelectName,ListName) =>{
     const SelectTag = document.createElement("select");
     SelectTag.classList.add("Select-hidden");
-    ListName.map((index)=>{
+    ListName.map((index,number)=>{
         const OptionTag = document.createElement("Option");
+        OptionTag.setAttribute("value",number);
         OptionTag.appendChild(document.createTextNode(index));
         SelectTag.appendChild(OptionTag);
     })

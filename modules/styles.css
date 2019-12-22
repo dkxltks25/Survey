@@ -22,7 +22,13 @@
     width:85%;
     margin:0px auto;
 }
-
+.SurveyItemTop{
+    display:flex;
+    justify-content: space-between;
+}
+.SurveyItemTop div:first-child{
+    width:60%;
+}
 .SurveyItemTools{
     float:right;
 }
@@ -40,6 +46,9 @@
 .SurveyItem-unfocus > .SurveyItemBottom{
     visibility: hidden;
     height:0px;
+}
+.SurveyItem-unfocus > .SurveyItemTop div:nth-child(2){
+    visibility: hidden;
 }
 /*SurveyItemTools 위치*/
 .SurveyItemTools{
