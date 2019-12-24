@@ -6,6 +6,7 @@ function Survey (container){
     this.SurveyTitle ="SurveyTitle";
     this.SurveyItemName = "SurveyItem";
     this.SurveyItemTopName = "SurveyItemTop";
+    this.SurveyItemCenterName = "SurveyItemCenter";
     this.SurveyItemTitleName = "SurveyItemTitle";
     this.SurveyItemSelectName = "SurveyItemSelect";
 
@@ -18,7 +19,7 @@ function Survey (container){
     this.SurveyDescripInput = "SurveyDescripInput";
 
     //아이콘 이름
-    //추가 버튼
+    //추가 버튼 
     this.IconAddName = "add";
     this.ButtonIconAddName = "IconAdddButton";
     this.IconCopyName = "content_copy";
@@ -36,7 +37,10 @@ function Survey (container){
 
     //SelectTag 제목 텍스트
     
-    this.SelectOptionText =["단답형","장문형","객관식","체크박스"];
+    this.SelectOptionText =["단답형","장문형","객관식","체크박스","직선단계","그리드","체크박스 그리드"];
+   
+    //form 이름 
+    this.SurveyFormName = "SurveyForm";
 }
 
 //설문지 제목 생성
@@ -67,23 +71,45 @@ Survey.prototype.createSurveyTools = function(){
     IconAddButton.addEventListener('click',()=>{
         const SurveyItem = createDivTag([this.SurveyItemName,this.MaterialPanel,"SurveyItem-unfocus"]);
 
-        
         const SurveyItemTopDiv = createDivTag([this.SurveyItemTopName]);
         const SurveyItemTitleDiv = createDivTag([this.MaterialInput]);
         const SurveyItemTitle = createInput([this.SurveyItemTitleName,this.MaterialInput]);
+        //SelectBox영역
         const SurveySelectDiv = createDivTag([this.MaterialInput]);
         const SurveySelectOption = createSelectTag([this.SurveyItemSelectName],this.SelectOptionText);
+        //센터 입력 칸 영역
+        const SurveyItemCenterDiv = createDivTag([this.SurveyItemCenterName]);
+        
         SurveyItemTitleDiv.appendChild(SurveyItemTitle);
         SurveySelectDiv.appendChild(SurveySelectOption);
         SurveyItemTopDiv.appendChild(SurveyItemTitleDiv);
         SurveyItemTopDiv.appendChild(SurveySelectDiv);
         SurveyItem.appendChild(SurveyItemTopDiv);
+        SurveyItem.appendChild(SurveyItemCenterDiv);
+        SurveySelectOption.addEventListener('change',(event)=>{
+            const {target:{value}} = event; 
+            const SurveyForm = createDivTag([this.MaterialInput]);
+            
+            if(value == 1){
+                const SurveyFormInput = createInput([this.MaterialInput]);
+                SurveyForm.appendChild(SurveyFormInput);
+                
+            }
+            if(value == 2){
+                const SurveyRadioForm = createFormTag([],"");
+                const SurveyFormRadio = createRadioTag([],"Text");
+                console.log(SurveyFormRadio);
+                console.log(SurveyRadioForm);
+                SurveyRadioForm.appendChild(SurveyFormRadio);
+                SurveyForm.appendChild(SurveyRadioForm); 
 
+            }
+            SurveyItemCenterDiv.appendChild(SurveyForm);
+
+        })
         
-        
-        console.dir(SurveySelectOption);
         //아이템 하단 기능
-        const SurveyItemBottomDiv =createDivTag([this.SurveyItemBottomName]);
+        const SurveyItemBottomDiv = createDivTag([this.SurveyItemBottomName]);
         //복사
         const SurveyItemCopy = createIconButton(this.ButtonIconCopyName,this.IconCopyName,this.IconButtonState);
         SurveyItemCopy.addEventListener('click',()=>{
@@ -132,15 +158,14 @@ Survey.prototype.createSurveyTools = function(){
         if(instances !== null){
             instance.getSelectedValues();
         }
-        console.log(instances);
-        SurveyItem.addEventListener('move',()=>alert(1));
+     
     });
     SurveyTools.appendChild(IconAddButton);
     this.Survey.appendChild(SurveyTools);
-    
-    
-
 }
+
+//form 태그 등록 
+
 // 공통 태그 생성 영역
 const createDivTag = (divName) =>{
     const DivTag = document.createElement("div");
@@ -192,6 +217,24 @@ const createSelectTag = (SelectName,ListName) =>{
     return SelectTag;
 }
 
+const createRadioTag = (RadioName,Text)=>{
+    const RadioTag = document.createElement("input");
+    const LabelTag = document.createElement("label");
+    const SpanTag = document.createElement("span");
+    SpanTag.appendChild(document.createTextNode(Text));
+    RadioTag.setAttribute("type","radio");
+    RadioName.map((index)=>RadioTag.classList.add(index));
+    LabelTag.appendChild(RadioTag);
+    LabelTag.appendChild(SpanTag);
+    return LabelTag;
+}
+
+const createFormTag = (FormName,FormId) =>{
+    const FormTag = document.createElement("form");
+    FormName.map((index)=>FormTag.appendChild(index));
+    FormTag.id = FormId;
+    return FormTag;
+}
 const calculatePoistion = ()=>{
 
 }
