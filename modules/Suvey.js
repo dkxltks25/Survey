@@ -26,6 +26,8 @@ function Survey (container){
     this.ButtonIconCopyName = "IconCopyButton";
     this.IconDeleteName = "delete";
     this.ButtonIconDeleteName = "IconDeleteButton";
+    this.IconCloseName = "close";
+    this.ButtonIconClose = "IconCloseButton";
     
     //아이콘 상태
     this.IconButtonState = "btn-floating"; 
@@ -86,25 +88,34 @@ Survey.prototype.createSurveyTools = function(){
         SurveyItemTopDiv.appendChild(SurveySelectDiv);
         SurveyItem.appendChild(SurveyItemTopDiv);
         SurveyItem.appendChild(SurveyItemCenterDiv);
+        //아이템 내의 셀렉트박스 체인지 이벤트
         SurveySelectOption.addEventListener('change',(event)=>{
             const {target:{value}} = event; 
+            //태그 내 하위 태그 삭제
+            deleteTagChild(SurveyItemCenterDiv);
             const SurveyForm = createDivTag([this.MaterialInput]);
-            
+            //장문형
             if(value == 1){
+                
                 const SurveyFormInput = createInput([this.MaterialInput]);
                 SurveyForm.appendChild(SurveyFormInput);
+                SurveyItemCenterDiv.appendChild(SurveyForm);
+
                 
             }
+            //객관식
             if(value == 2){
-                const SurveyRadioForm = createFormTag([],"");
-                const SurveyFormRadio = createRadioTag([],"Text");
-                console.log(SurveyFormRadio);
-                console.log(SurveyRadioForm);
-                SurveyRadioForm.appendChild(SurveyFormRadio);
-                SurveyForm.appendChild(SurveyRadioForm); 
-
+                    const WrapDiv  = createDivTag([]);
+                    const SurveyRadioForm = createFormTag([],"");
+                    const SurveyFormRadio = createRadioTag([],"Text");
+                    SurveyRadioForm.appendChild(SurveyFormRadio);
+                    const IconCloseButton = createIconButton(this.ButtonIconCloseName,this.IconCloseName,this.IconButtonState);
+                    SurveyForm.appendChild(SurveyRadioForm); 
+                    WrapDiv.appendChild(SurveyForm);
+                    WrapDiv.appendChild(IconCloseButton);
+                    SurveyItemCenterDiv.appendChild(WrapDiv);
             }
-            SurveyItemCenterDiv.appendChild(SurveyForm);
+
 
         })
         
@@ -186,7 +197,7 @@ const createIconButton = (IconButtonName,IconText,IconState=null)=>{
     return IconButton;
 }
 
-const createInput = (InputName,type="text",text,placeholder="입력해주세요") =>{        
+const createInput = (InputName,type="text",text="text",placeholder="입력해주세요") =>{        
     //input TextName을 생성합시당
     console.log(placeholder);
     const InputTag = document.createElement("input");
@@ -221,7 +232,8 @@ const createRadioTag = (RadioName,Text)=>{
     const RadioTag = document.createElement("input");
     const LabelTag = document.createElement("label");
     const SpanTag = document.createElement("span");
-    SpanTag.appendChild(document.createTextNode(Text));
+    const InputTag = createInput();
+    SpanTag.appendChild(InputTag);
     RadioTag.setAttribute("type","radio");
     RadioName.map((index)=>RadioTag.classList.add(index));
     LabelTag.appendChild(RadioTag);
@@ -235,7 +247,24 @@ const createFormTag = (FormName,FormId) =>{
     FormTag.id = FormId;
     return FormTag;
 }
+
+
+//특정 중복 기능을 수행하는 함수
+//위치 값 계산
 const calculatePoistion = ()=>{
+
+
+}
+
+//특정태그의 하위 자식들을 삭제하는 함수 
+const deleteTagChild = (Tag)=>{
+    console.dir(Tag);
+    const {childNodes} = Tag;
+    console.dir(childNodes);
+    for(let i = 0; i <childNodes.length; i++ ){
+        console.dir(childNodes[i]);
+        childNodes[i].remove();
+    }
 
 }
 // 제일 처음 실행어야 하는 함수
