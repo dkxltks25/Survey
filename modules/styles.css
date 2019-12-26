@@ -55,7 +55,16 @@
     position: relative;
     transition: 0.3s;
 }
-
+.SurveyFormWrap{
+    display:flex;
+    justify-content: space-between;
+    width:90%;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.SurveyShortAnswer{
+    width:20%;
+}
 /*푸터*/
 .page-footer{
     width:100%;

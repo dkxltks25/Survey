@@ -13,11 +13,11 @@ function Survey (container){
     this.SurveyItemBottomName = "SurveyItemBottom";
     this.SurveyItemsTools = "SurveyItemTools";
     this.SurveyItemSubjectName = "";
-    this.SurveyItemContentName = "";
-    
+    this.SurveyItemContentName = "";   
+    this.SurveyFormWrapName = "SurveyFormWrap";
     this.SurveyTitleInput = "SurveyTitleInput";
     this.SurveyDescripInput = "SurveyDescripInput";
-
+    this.SurveyShortAnswer = "SurveyShortAnswer";
     //아이콘 이름
     //추가 버튼 
     this.IconAddName = "add";
@@ -28,6 +28,8 @@ function Survey (container){
     this.ButtonIconDeleteName = "IconDeleteButton";
     this.IconCloseName = "close";
     this.ButtonIconClose = "IconCloseButton";
+    this.IconInfoName = "Info";
+    this.ButtonIconInfoName = "IconInfoButton";
     
     //아이콘 상태
     this.IconButtonState = "btn-floating"; 
@@ -92,8 +94,20 @@ Survey.prototype.createSurveyTools = function(){
         SurveySelectOption.addEventListener('change',(event)=>{
             const {target:{value}} = event; 
             //태그 내 하위 태그 삭제
-            deleteTagChild(SurveyItemCenterDiv);
+            const {childNodes} = SurveyItemCenterDiv; 
+            const {length} = childNodes; 
+            for(let i = 0; i<length; i++){
+                childNodes[0].remove();
+            }
+
             const SurveyForm = createDivTag([this.MaterialInput]);
+            //단답형
+            if(value == 0){
+                const SurveyFormInput = createInput([this.MaterialInput,this.SurveyShortAnswer]);
+                SurveyFormInput.style.width = "20%";
+                SurveyForm.appendChild(SurveyFormInput);
+                SurveyItemCenterDiv.appendChild(SurveyForm);
+            }
             //장문형
             if(value == 1){
                 
@@ -105,15 +119,55 @@ Survey.prototype.createSurveyTools = function(){
             }
             //객관식
             if(value == 2){
-                    const WrapDiv  = createDivTag([]);
-                    const SurveyRadioForm = createFormTag([],"");
-                    const SurveyFormRadio = createRadioTag([],"Text");
-                    SurveyRadioForm.appendChild(SurveyFormRadio);
+                    const WrapDiv  = createDivTag([this.SurveyFormWrapName]);
+                    const WrapDiv1 = createDivTag([this.SurveyFormWrapName]);
+                    //전체 폼 div 생성
+                    //저체 폼 생성
+                    const SurveyRadioFormTag = createFormTag([],"");
+                    //하위 라디오 버튼 생성
+                    const SurveyFormRadioTag = createRadioTag([],"Text");
+
+                    //기타 추가 및 라디오 버튼 추가
+                    const [SurveyFormAddRadio,AddOptionSpan,EtcOptionSpan] = createRadioTag([],"Add",SurveyForm);
+                    SurveyRadioFormTag.appendChild(SurveyFormRadioTag);
                     const IconCloseButton = createIconButton(this.ButtonIconCloseName,this.IconCloseName,this.IconButtonState);
-                    SurveyForm.appendChild(SurveyRadioForm); 
+                    
+                    //삭제 기능
+                    IconCloseButton.addEventListener('click',()=>{
+                        WrapDiv.remove();
+                    })
+                    SurveyForm.appendChild(SurveyRadioFormTag); 
+                    WrapDiv1.appendChild(SurveyFormAddRadio);
                     WrapDiv.appendChild(SurveyForm);
                     WrapDiv.appendChild(IconCloseButton);
                     SurveyItemCenterDiv.appendChild(WrapDiv);
+                    SurveyItemCenterDiv.appendChild(WrapDiv1)
+
+                    AddOptionSpan.addEventListener('click',()=>{
+                        
+                        const WrapDiv3  = createDivTag([this.SurveyFormWrapName]);
+                        const SurveyRadioFormTag = createFormTag([],"");
+                        const SurveyFormRadioTag = createRadioTag([],"Text");
+                        SurveyRadioFormTag.appendChild(SurveyFormRadioTag);
+                        const {childNodes} = SurveyItemCenterDiv;
+                        const IconCloseButton = createIconButton(this.ButtonIconCloseName,this.IconCloseName,this.IconButtonState);
+                        IconCloseButton.addEventListener('click',()=>{
+                            WrapDiv3.remove();
+                        })
+                        WrapDiv3.appendChild(SurveyRadioFormTag);
+                        WrapDiv3.appendChild(IconCloseButton);
+                        if(childNodes.length < 2){
+                            childNodes[childNodes.length-1].before(WrapDiv3);
+                        }
+                        else{
+                            childNodes[childNodes.length-2].after(WrapDiv3);
+                        }
+                    })
+                    EtcOptionSpan.addEventListener('click',()=>{
+                        //기타 추가
+                        
+                    })
+
             }
 
 
@@ -133,6 +187,20 @@ Survey.prototype.createSurveyTools = function(){
         SurveyItemDelete.addEventListener('click',(evnet)=>{
             SurveyItem.remove();
         }) 
+        //설명
+
+        const SurveyItemInfo = createIconButton(this.ButtonIconInfoName, this.IconInfoName, this.IconButtonState);
+        //SurveyItemInfo
+        SurveyItemInfo.addEventListener('click',()=>{
+            const {dataset:{id}} = SurveyItemInfo;
+            if(id === undefined){
+                const SurveyItemInput = createInput();
+                SurveyItemTopDiv.after(SurveyItemInput);
+                SurveyItemInfo.setAttribute("data-id","Complete");
+            }else{
+                alert("이미 등록하셨습니다");
+            }
+        })
         //필수
         //const SurveyItemNeed = createIconButton("","",null);
         //.3개
@@ -144,7 +212,7 @@ Survey.prototype.createSurveyTools = function(){
         
         SurveyItemBottomDiv.appendChild(SurveyItemCopy);
         SurveyItemBottomDiv.appendChild(SurveyItemDelete);
-        
+        SurveyItemBottomDiv.appendChild(SurveyItemInfo);
         const elems = document.querySelectorAll('select');
         const instances = M.FormSelect.init(elems);
         //SurveyItem click
@@ -228,16 +296,34 @@ const createSelectTag = (SelectName,ListName) =>{
     return SelectTag;
 }
 
-const createRadioTag = (RadioName,Text)=>{
-    const RadioTag = document.createElement("input");
+const createRadioTag = (RadioName,Text,AllRadioForm)=>{
+    const RadioTag = document.createElement('input');
     const LabelTag = document.createElement("label");
     const SpanTag = document.createElement("span");
     const InputTag = createInput();
-    SpanTag.appendChild(InputTag);
     RadioTag.setAttribute("type","radio");
     RadioName.map((index)=>RadioTag.classList.add(index));
-    LabelTag.appendChild(RadioTag);
-    LabelTag.appendChild(SpanTag);
+    
+    if(Text === "Add"){
+        //추가 설정
+        const AddOptionSpan = document.createElement("span");
+        const EtcOptionSpan  = document.createElement("span");
+        AddOptionSpan.classList.add("ClickLabel");
+        AddOptionSpan.appendChild(document.createTextNode("추가"));
+        EtcOptionSpan.classList.add("ClickLabel");
+        EtcOptionSpan.appendChild(document.createTextNode("기타"));
+        SpanTag.appendChild(AddOptionSpan);
+        SpanTag.appendChild(document.createTextNode("또는"));
+        SpanTag.appendChild(EtcOptionSpan);
+        LabelTag.appendChild(RadioTag);
+        LabelTag.append(SpanTag);
+        return [LabelTag,AddOptionSpan,EtcOptionSpan];
+    }
+    else{
+        SpanTag.appendChild(InputTag);
+        LabelTag.appendChild(RadioTag);
+        LabelTag.appendChild(SpanTag);
+    }
     return LabelTag;
 }
 
