@@ -76,3 +76,7 @@
 select{
     display:inline;
 }
+
+.SmallInput {
+    width:200px;
+}
