@@ -17,7 +17,9 @@ function Survey(container) {
     this.SurveyDescripInput = 'SurveyDescripInput'
     this.SurveyShortAnswer = 'SurveyShortAnswer'
     this.SurveyRowColumnName = 'SurveyRowColumn'
+    this.SurveyItemRowWrapName = 'SurveyItemRowWrap'
     this.SurveyItemRowName = 'SurveyItemRow'
+    
     this.SurveyItemColumnName = 'SurveyItemColumn'
 
     // 길이가 작은 텍스트 박스
@@ -276,6 +278,7 @@ Survey.prototype.createSurveyTools = function() {
                 const RowColumnWrapDiv = createDivTag([
                     this.SurveyRowColumnName,
                 ])
+                const createRowWrapDiv = createDivTag([this.SurveyItemRowWrapName]);
                 const CreateRow = State => {
                     let Subject
                     if (State === 'Add') {
@@ -310,7 +313,8 @@ Survey.prototype.createSurveyTools = function() {
                     State === 'Add'
                         ? ''
                         : createRowDiv.appendChild(CloseIconButton)
-                    RowColumnWrapDiv.appendChild(createRowDiv)
+                    createRowWrapDiv.appendChild(createRowDiv);
+                    RowColumnWrapDiv.appendChild(createRowWrapDiv);
                     
                 }
                 const CreateColumn = State => {
