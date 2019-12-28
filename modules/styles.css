@@ -104,11 +104,16 @@ select{
 .SurveyItemColumn button{
     margin-left:10px;
 }
-.SurveyRowColumn{
-    display:flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+
+.SurveyItemRowWrap{
+    float:left;
+}
+.SurveyItemColumnWrap{
+    float:right;
 }
 .btn-floating{
     min-width: 40px;
+}
+.SurveyItemBottom{
+    clear:both;
 }
