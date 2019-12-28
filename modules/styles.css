@@ -106,6 +106,7 @@ select{
 }
 
 .SurveyItemRowWrap{
+    width:50%;
     float:left;
 }
 .SurveyItemColumnWrap{

@@ -3,11 +3,13 @@ function Survey(container) {
     this.SurveyName = 'Survey'
     this.SurveyTitle = 'SurveyTitle'
     this.SurveyItemName = 'SurveyItem'
+    
     this.SurveyItemTopName = 'SurveyItemTop'
     this.SurveyItemCenterName = 'SurveyItemCenter'
     this.SurveyItemTitleName = 'SurveyItemTitle'
     this.SurveyItemSelectName = 'SurveyItemSelect'
-
+    //SurveyItemDrag
+    this.SurveyItemDrag = 'SurveyItemDrag';
     this.SurveyItemBottomName = 'SurveyItemBottom'
     this.SurveyItemsTools = 'SurveyItemTools'
     this.SurveyItemSubjectName = ''
@@ -22,6 +24,7 @@ function Survey(container) {
 
     this.SurveyItemColumnName = 'SurveyItemColumn'
     this.SurveyItemColumnWrapName = 'SurveyItemColumnWrap'
+
     // 길이가 작은 텍스트 박스
     this.smallInput = 'SmallInput'
     //아이콘 이름
@@ -88,6 +91,7 @@ Survey.prototype.createSurveyTools = function() {
     const SurveyTools = createDivTag([
         this.SurveyItemsTools,
         this.MaterialPanel,
+        this.SurveyItemDrag
     ])
     //항목 관리 도구 Item 추가
     const IconAddButton = createIconButton(
@@ -356,7 +360,7 @@ Survey.prototype.createSurveyTools = function() {
                         this.IconCloseName,
                         this.IconButtonState
                     )
-                    createColumnDiv.appendChild(Columnspan)
+                    createColumnDiv.appendChild(Columnspan) 
                     createColumnDiv.appendChild(ColumnInputArea)
                     State === 'Add'
                         ? ''
