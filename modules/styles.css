@@ -80,3 +80,35 @@ select{
 .SmallInput {
     width:200px;
 }
+
+.SurveyItemRow{
+    width:400px;
+    display:flex;
+    justify-content: space-around;
+}
+.SurveyItemRow span{
+    margin-right: 10px;
+}
+.SurveyItemRow button{
+    margin-left:10px;
+}
+
+.SurveyItemColumn{
+    width:400px;
+    display:flex;
+    justify-content: space-around;
+}
+.SurveyItemColumn span{
+    margin-right: 10px;
+}
+.SurveyItemColumn button{
+    margin-left:10px;
+}
+.SurveyRowColumn{
+    display:flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.btn-floating{
+    min-width: 40px;
+}

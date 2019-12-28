@@ -16,6 +16,7 @@ function Survey(container) {
     this.SurveyTitleInput = 'SurveyTitleInput'
     this.SurveyDescripInput = 'SurveyDescripInput'
     this.SurveyShortAnswer = 'SurveyShortAnswer'
+    this.SurveyRowColumnName = 'SurveyRowColumn'
     this.SurveyItemRowName = 'SurveyItemRow'
     this.SurveyItemColumnName = 'SurveyItemColumn'
 
@@ -272,35 +273,81 @@ Survey.prototype.createSurveyTools = function() {
             //직선 단계 1~N 번까지의 값중 만족도 조사로 제작
             if (value == 4) {
                 const WrapDiv = createDivTag([this.SurveyFormName])
-                const CreateColumnAndRow = () => {
+                const RowColumnWrapDiv = createDivTag([
+                    this.SurveyRowColumnName,
+                ])
+                const CreateRow = State => {
+                    let Subject
+                    if (State === 'Add') {
+                        //등록
+                        Subject = '등록'
+                    } else {
+                        Subject = '일반'
+                    }
                     const createRowDiv = createDivTag([this.SurveyItemRowName])
-                    const createColumnDiv = createDivTag([
-                        this.SurveyItemColumnName,
-                    ])
 
-                    //column;
+                    //Row;
                     const span = document.createElement('span')
                     span.appendChild(document.createTextNode('1'))
                     const InputArea = createInput(
                         [this.smallInput],
                         'text',
                         'text',
-                        '항목'
+                        Subject
                     )
+                    if(State === 'Add'){
+                        InputArea.addEventListener('click',()=>{
+                            CreateRow('Plus');
+                        })
+                    }
                     const CloseIconButton = createIconButton(
                         this.IconCloseButton,
                         this.IconCloseName,
                         this.IconButtonState
                     )
-                    //
                     createRowDiv.appendChild(span)
                     createRowDiv.appendChild(InputArea)
-                    createRowDiv.appendChild(CloseIconButton)
-
-                    WrapDiv.appendChild(createRowDiv)
-                    WrapDiv.appendChild(createColumnDiv)
+                    State === 'Add'
+                        ? ''
+                        : createRowDiv.appendChild(CloseIconButton)
+                    RowColumnWrapDiv.appendChild(createRowDiv)
+                    
                 }
-                CreateColumnAndRow();
+                const CreateColumn = State => {
+                    let Subject
+                    if (State === 'Add') {
+                        Subject = '등록'
+                    } else {
+                        Subject = '항목'
+                    }
+                    const createColumnDiv = createDivTag([
+                        this.SurveyItemColumnName,
+                    ])
+                    const Columnspan = document.createElement('span')
+                    Columnspan.appendChild(document.createTextNode('1'))
+                    const ColumnInputArea = createInput(
+                        [this.smallInput],
+                        'text',
+                        'text',
+                        Subject
+                    )
+                    const ColumnCloseIconButton = createIconButton(
+                        this.IconCloseButton,
+                        this.IconCloseName,
+                        this.IconButtonState
+                    )
+                    createColumnDiv.appendChild(Columnspan)
+                    createColumnDiv.appendChild(ColumnInputArea)
+                    State === 'Add'
+                        ? ''
+                        : createColumnDiv.appendChild(ColumnCloseIconButton)
+                    RowColumnWrapDiv.appendChild(createColumnDiv)
+                }
+                CreateRow()
+                CreateColumn()
+                CreateRow('Add')
+                CreateColumn('Add')
+                WrapDiv.appendChild(RowColumnWrapDiv)
                 SurveyItemCenterDiv.appendChild(WrapDiv)
             }
         })
