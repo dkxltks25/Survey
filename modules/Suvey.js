@@ -3,13 +3,13 @@ function Survey(container) {
     this.SurveyName = 'Survey'
     this.SurveyTitle = 'SurveyTitle'
     this.SurveyItemName = 'SurveyItem'
-    
+
     this.SurveyItemTopName = 'SurveyItemTop'
     this.SurveyItemCenterName = 'SurveyItemCenter'
     this.SurveyItemTitleName = 'SurveyItemTitle'
     this.SurveyItemSelectName = 'SurveyItemSelect'
     //SurveyItemDrag
-    this.SurveyItemDrag = 'SurveyItemDrag';
+    this.SurveyItemDrag = 'SurveyItemDrag'
     this.SurveyItemBottomName = 'SurveyItemBottom'
     this.SurveyItemsTools = 'SurveyItemTools'
     this.SurveyItemSubjectName = ''
@@ -37,7 +37,7 @@ function Survey(container) {
     this.ButtonIconDeleteName = 'IconDeleteButton'
     this.IconCloseName = 'close'
     this.ButtonIconClose = 'IconCloseButton'
-    this.IconInfoName = 'Info'
+    this.IconInfoName = 'info'
     this.ButtonIconInfoName = 'IconInfoButton'
 
     //아이콘 상태
@@ -91,7 +91,7 @@ Survey.prototype.createSurveyTools = function() {
     const SurveyTools = createDivTag([
         this.SurveyItemsTools,
         this.MaterialPanel,
-        this.SurveyItemDrag
+        this.SurveyItemDrag,
     ])
     //항목 관리 도구 Item 추가
     const IconAddButton = createIconButton(
@@ -288,7 +288,7 @@ Survey.prototype.createSurveyTools = function() {
                 const createColumnWrapDiv = createDivTag([
                     this.SurveyItemColumnWrapName,
                 ])
-                const CreateRow = (State,Position) => {
+                const CreateRow = (State, Position) => {
                     let Subject
                     if (State === 'Add') {
                         //등록
@@ -309,8 +309,8 @@ Survey.prototype.createSurveyTools = function() {
                     )
                     if (State === 'Add') {
                         InputArea.addEventListener('click', () => {
-                            const {children} = createRowWrapDiv
-                            CreateRow('Plus',childNodes[children.length-2]);
+                            const { children } = createRowWrapDiv
+                            CreateRow('Plus', childNodes[children.length - 2])
                         })
                     }
                     const CloseIconButton = createIconButton(
@@ -326,10 +326,11 @@ Survey.prototype.createSurveyTools = function() {
                     State === 'Add'
                         ? ''
                         : createRowDiv.appendChild(CloseIconButton)
-                    if(State === 'Plus'){
-                        Position.before(createRowDiv);
+                    if (State === 'Plus') {
+                        Position.before(createRowDiv)
+                    } else {
+                        createRowWrapDiv.appendChild(createRowDiv)
                     }
-                    else{createRowWrapDiv.appendChild(createRowDiv)}
                     RowColumnWrapDiv.appendChild(createRowWrapDiv)
                 }
                 const CreateColumn = State => {
@@ -360,7 +361,7 @@ Survey.prototype.createSurveyTools = function() {
                         this.IconCloseName,
                         this.IconButtonState
                     )
-                    createColumnDiv.appendChild(Columnspan) 
+                    createColumnDiv.appendChild(Columnspan)
                     createColumnDiv.appendChild(ColumnInputArea)
                     State === 'Add'
                         ? ''
