@@ -72,10 +72,6 @@
     bottom:0;
 }
 
-.SurveyDescripInput{
-    height:20px;
-        font-size: 10px;
-}
 select{
     display:inline;
 }
@@ -123,9 +119,4 @@ select{
 }
 .SurveyRowColumn{
     float:left;
-}
-
-.SurveyDescripDiv input{
-    height:20px;
-    font-size:5pt;
 }

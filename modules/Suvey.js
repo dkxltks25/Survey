@@ -14,7 +14,7 @@ function Survey(container) {
     this.SurveyItemsTools = 'SurveyItemTools'
     this.SurveyItemSubjectName = ''
     this.SurveyItemContentName = ''
-    
+
     this.SurveyFormWrapName = 'SurveyFormWrap'
     this.SurveyTitleInput = 'SurveyTitleInput'
     this.SurveyDescripDiv = 'SurveyDescripDiv'
@@ -64,6 +64,9 @@ function Survey(container) {
 
     //form 이름
     this.SurveyFormName = 'SurveyForm'
+
+    //load전 저장
+    this.SurveySelectName = [this.SurveyTitle, this.SurveyItemName]
 }
 
 //설문지 제목 생성
@@ -312,7 +315,7 @@ Survey.prototype.createSurveyTools = function() {
                     if (State === 'Add') {
                         InputArea.addEventListener('click', () => {
                             const { children } = RowColumnWrapDiv
-                            CreateRow('Plus', children[children.length-1]);
+                            CreateRow('Plus', children[children.length - 1])
                         })
                     }
                     const CloseIconButton = createIconButton(
@@ -330,7 +333,7 @@ Survey.prototype.createSurveyTools = function() {
                         : createRowDiv.appendChild(CloseIconButton)
                     if (State === 'Plus') {
                         Position.before(createRowDiv)
-                        console.log(Position);
+                        console.log(Position)
                     } else {
                         RowColumnWrapDiv.appendChild(createRowDiv)
                     }
@@ -414,10 +417,17 @@ Survey.prototype.createSurveyTools = function() {
                 dataset: { id },
             } = SurveyItemInfo
             if (id === undefined) {
-                const SurveyItemDescripDiv = createDivTag([this.SurveyDescripDiv]);
-                const SurveyItemInput = createInput(this.SurveyDescripInput,"text",null,"설명을적어주세요");
-                SurveyItemDescripDiv.appendChild(SurveyItemInput);
-                SurveyItemTopDiv.after(SurveyItemDescripDiv);
+                const SurveyItemDescripDiv = createDivTag([
+                    this.SurveyDescripDiv,
+                ])
+                const SurveyItemInput = createInput(
+                    this.SurveyDescripInput,
+                    'text',
+                    null,
+                    '설명을적어주세요'
+                )
+                SurveyItemDescripDiv.appendChild(SurveyItemInput)
+                SurveyItemTopDiv.after(SurveyItemDescripDiv)
                 SurveyItemInfo.setAttribute('data-id', 'Complete')
             } else {
                 alert('이미 등록하셨습니다')
@@ -611,16 +621,45 @@ const deleteTagChild = Tag => {
         childNodes[i].remove()
     }
 }
+
+// 사용자 설문지 폼 저장하기
+Survey.prototype.loadSurvey = function() {
+    const MySurvey = {};
+    const { children } = this.Survey
+
+    //surveytitle, surveyItem;
+    for (let i = 0; i < children.length; i++) {
+        const className = children[i].classList[0]
+        //설문지 타이틀인 녀석들
+        if (this.SurveySelectName[0] === className) {
+            const titleChildren = children[i].children;
+            for(let j = 0; j <titleChildren.length;j++){
+                DivExtractionInput(titleChildren[j]);
+            }
+        }
+        //설문지의 해당 영역인 녀석들
+        if (this.SurveySelectName[1] === className[1]) {
+        }
+    }
+}
+//Div의 innerHTML 요소를 추출
+const DivExtractionInput = (div)=>{
+    const {children} = div;
+    const input = children[0];
+    let str = input.value.replace(/(?:\r\n|\r|\n)/g, '<br />');
+    return str;
+}
 // 제일 처음 실행어야 하는 함수
 Survey.prototype.createSurvey = function() {
     //설문지의 이름 제작
-    const Now = new Date();
-    console.log(Now.getFullYear());
-    console.log(Now.getMonth()+1);
-    console.log(Now.getDay());
+    const Now = new Date()
+    console.log(Now.getFullYear())
+    console.log(Now.getMonth() + 1)
+    console.log(Now.getDay())
 
-    console.log(Now.getSeconds());
-    console.log(Now.getDate());
+    console.log(Now.getSeconds())
+    console.log(Now.getDate())
     this.createSurveyTitle()
     this.createSurveyTools()
+    this.loadSurvey()
 }
