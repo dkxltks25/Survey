@@ -311,8 +311,8 @@ Survey.prototype.createSurveyTools = function() {
                     )
                     if (State === 'Add') {
                         InputArea.addEventListener('click', () => {
-                            const { children } = createRowWrapDiv
-                            CreateRow('Plus', childNodes[children.length - 2])
+                            const { children } = RowColumnWrapDiv
+                            CreateRow('Plus', children[children.length-1]);
                         })
                     }
                     const CloseIconButton = createIconButton(
@@ -330,10 +330,10 @@ Survey.prototype.createSurveyTools = function() {
                         : createRowDiv.appendChild(CloseIconButton)
                     if (State === 'Plus') {
                         Position.before(createRowDiv)
+                        console.log(Position);
                     } else {
-                        createRowWrapDiv.appendChild(createRowDiv)
+                        RowColumnWrapDiv.appendChild(createRowDiv)
                     }
-                    RowColumnWrapDiv.appendChild(createRowWrapDiv)
                 }
                 const CreateColumn = State => {
                     let Subject

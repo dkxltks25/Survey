@@ -121,7 +121,9 @@ select{
 .SurveyItemBottom{
     clear:both;
 }
-
+.SurveyRowColumn{
+    float:left;
+}
 
 .SurveyDescripDiv input{
     height:20px;
