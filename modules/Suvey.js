@@ -137,6 +137,8 @@ Survey.prototype.createSurveyTools = function() {
             const {
                 target: { value },
             } = event
+            SurveySelectDiv.setAttribute('data-select',value)
+            console.log(SurveySelectDiv)
             //태그 내 하위 태그 삭제
             const { childNodes } = SurveyItemCenterDiv
             const { length } = childNodes
@@ -634,20 +636,69 @@ Survey.prototype.loadSurvey = function() {
         if (this.SurveySelectName[0] === className) {
             const titleChildren = children[i].children;
             for(let j = 0; j <titleChildren.length;j++){
+                //제목 밑 설명
                 DivExtractionInput(titleChildren[j]);
             }
         }
-        //설문지의 해당 영역인 녀석들
-        if (this.SurveySelectName[1] === className[1]) {
+        //설문지의 해당 영역이 item인 녀석들
+        if (this.SurveySelectName[1] === className) {
+            const itemChildren = children[i].children;
+            const [itemTop,itemCenter,itemBottom] = itemChildren; 
+            const itemTopChildren = itemTop.children;  
+            const itemCenterchildren = itemCenter.children; 
+            const itemBottomchildren = itemBottom.children; 
+            const SelectedItemValue = itemTopChildren[1].dataset.select;
+            
+            if(SelectedItemValue == undefined){
+                //셀렉트 값이 빈경우
+            }
+            if(SelectedItemValue == 0){
+                //단답형
+                //제목 추출
+                DivExtractionInput(itemTopChildren[0]);
+                //내용 추출
+                DivExtractionInput(itemCenterchildren[0]);
+            }
+            if(SelectedItemValue == 1){
+                //장문형
+                //제목 추출
+                DivExtractionInput(itemTopChildren[0]);
+                //내용 추출
+                DivExtractionInput(itemCenterchildren[0]);
+            }
+            if(SelectedItemValue == 2){
+                for(let k = 0; k<itemCenterchildren.length-1;k++){
+                    if(k === 0){
+                        const item = itemCenterchildren[k].children
+                        const Fitem = item[0].children[0].children[0].children[1]
+                        DivExtractionInput(Fitem);
+                    }else{
+                        const item = itemCenterchildren[k].children
+                        const Fitem = item[0].children[0].children[1];
+                        DivExtractionInput(Fitem);
+                    }
+                }
+            }
         }
     }
 }
 //Div의 innerHTML 요소를 추출
-const DivExtractionInput = (div)=>{
-    const {children} = div;
-    const input = children[0];
-    let str = input.value.replace(/(?:\r\n|\r|\n)/g, '<br />');
-    return str;
+const DivExtractionInput = (div,state=0)=>{
+    if(state === 0 ){
+        const {children} = div;
+        const input = children[0];
+        let str = input.value.replace(/(?:\r\n|\r|\n)/g, '<br />');
+        console.log(str);   
+        return str;
+    }
+    if(state === 1){
+        const input = div;
+        console.dir(input);
+        let str = input.value.replace(/(?:\r\n|\r|\n)/g, '<br />');
+        console.log(str);   
+        return str;
+    }
+
 }
 // 제일 처음 실행어야 하는 함수
 Survey.prototype.createSurvey = function() {
