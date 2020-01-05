@@ -14,8 +14,10 @@ function Survey(container) {
     this.SurveyItemsTools = 'SurveyItemTools'
     this.SurveyItemSubjectName = ''
     this.SurveyItemContentName = ''
+    
     this.SurveyFormWrapName = 'SurveyFormWrap'
     this.SurveyTitleInput = 'SurveyTitleInput'
+    this.SurveyDescripDiv = 'SurveyDescripDiv'
     this.SurveyDescripInput = 'SurveyDescripInput'
     this.SurveyShortAnswer = 'SurveyShortAnswer'
     this.SurveyRowColumnName = 'SurveyRowColumn'
@@ -367,7 +369,7 @@ Survey.prototype.createSurveyTools = function() {
                         ? ''
                         : createColumnDiv.appendChild(ColumnCloseIconButton)
                     createColumnWrapDiv.appendChild(createColumnDiv)
-                    RowColumnWrapDiv.appendChild(createColumnWrapDiv)
+                    WrapDiv.appendChild(createColumnWrapDiv)
                 }
                 CreateRow()
                 CreateColumn()
@@ -412,8 +414,10 @@ Survey.prototype.createSurveyTools = function() {
                 dataset: { id },
             } = SurveyItemInfo
             if (id === undefined) {
-                const SurveyItemInput = createInput()
-                SurveyItemTopDiv.after(SurveyItemInput)
+                const SurveyItemDescripDiv = createDivTag([this.SurveyDescripDiv]);
+                const SurveyItemInput = createInput(this.SurveyDescripInput,"text",null,"설명을적어주세요");
+                SurveyItemDescripDiv.appendChild(SurveyItemInput);
+                SurveyItemTopDiv.after(SurveyItemDescripDiv);
                 SurveyItemInfo.setAttribute('data-id', 'Complete')
             } else {
                 alert('이미 등록하셨습니다')
@@ -609,6 +613,14 @@ const deleteTagChild = Tag => {
 }
 // 제일 처음 실행어야 하는 함수
 Survey.prototype.createSurvey = function() {
+    //설문지의 이름 제작
+    const Now = new Date();
+    console.log(Now.getFullYear());
+    console.log(Now.getMonth()+1);
+    console.log(Now.getDay());
+
+    console.log(Now.getSeconds());
+    console.log(Now.getDate());
     this.createSurveyTitle()
     this.createSurveyTools()
 }

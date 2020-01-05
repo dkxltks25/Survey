@@ -72,7 +72,10 @@
     bottom:0;
 }
 
-
+.SurveyDescripInput{
+    height:20px;
+        font-size: 10px;
+}
 select{
     display:inline;
 }
@@ -117,4 +120,10 @@ select{
 }
 .SurveyItemBottom{
     clear:both;
+}
+
+
+.SurveyDescripDiv input{
+    height:20px;
+    font-size:5pt;
 }
