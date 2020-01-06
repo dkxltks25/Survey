@@ -67,6 +67,7 @@ function Survey(container) {
 
     //load전 저장
     this.SurveySelectName = [this.SurveyTitle, this.SurveyItemName]
+    this.SurveyCollection = {}
 }
 
 //설문지 제목 생성
@@ -137,7 +138,7 @@ Survey.prototype.createSurveyTools = function() {
             const {
                 target: { value },
             } = event
-            SurveySelectDiv.setAttribute('data-select',value)
+            SurveySelectDiv.setAttribute('data-select', value)
             console.log(SurveySelectDiv)
             //태그 내 하위 태그 삭제
             const { childNodes } = SurveyItemCenterDiv
@@ -340,7 +341,7 @@ Survey.prototype.createSurveyTools = function() {
                         RowColumnWrapDiv.appendChild(createRowDiv)
                     }
                 }
-                const CreateColumn = State => {
+                const CreateColumn = (State, Position) => {
                     let Subject
                     if (State === 'Add') {
                         Subject = '등록'
@@ -360,7 +361,8 @@ Survey.prototype.createSurveyTools = function() {
                     )
                     if (State === 'Add') {
                         ColumnInputArea.addEventListener('click', () => {
-                            CreateColumn('Plus')
+                            const { children } = createColumnWrapDiv
+                            CreateColumn('Plus', children[children.length - 1])
                         })
                     }
                     const ColumnCloseIconButton = createIconButton(
@@ -373,14 +375,19 @@ Survey.prototype.createSurveyTools = function() {
                     State === 'Add'
                         ? ''
                         : createColumnDiv.appendChild(ColumnCloseIconButton)
-                    createColumnWrapDiv.appendChild(createColumnDiv)
-                    WrapDiv.appendChild(createColumnWrapDiv)
+                    if (State === 'Plus') {
+                        Position.before(createColumnDiv)
+                        console.log(Position)
+                    } else {
+                        createColumnWrapDiv.appendChild(createColumnDiv)
+                    }
                 }
                 CreateRow()
                 CreateColumn()
                 CreateRow('Add')
                 CreateColumn('Add')
                 WrapDiv.appendChild(RowColumnWrapDiv)
+                WrapDiv.appendChild(createColumnWrapDiv)
                 SurveyItemCenterDiv.appendChild(WrapDiv)
             }
         })
@@ -508,7 +515,6 @@ const createInput = (
     const InputTag = document.createElement('input')
     InputTag.setAttribute('type', type)
     InputTag.setAttribute('placeholder', placeholder)
-    console.dir(typeof InputName)
 
     if (typeof InputName === 'string') {
         InputTag.classList.add(InputName)
@@ -625,80 +631,228 @@ const deleteTagChild = Tag => {
 }
 
 // 사용자 설문지 폼 저장하기
-Survey.prototype.loadSurvey = function() {
-    const MySurvey = {};
+Survey.prototype.SaveSurvey = function() {
     const { children } = this.Survey
-
+    const CollectionItem = {}
+    const ItemArray = []
     //surveytitle, surveyItem;
     for (let i = 0; i < children.length; i++) {
         const className = children[i].classList[0]
         //설문지 타이틀인 녀석들
         if (this.SurveySelectName[0] === className) {
-            const titleChildren = children[i].children;
-            for(let j = 0; j <titleChildren.length;j++){
+            const MainTitle = {}
+            const titleChildren = children[i].children
+            for (let j = 0; j < titleChildren.length; j++) {
                 //제목 밑 설명
-                DivExtractionInput(titleChildren[j]);
+                j === 0
+                    ? (MainTitle['Title'] = DivExtractionInput(
+                          titleChildren[j]
+                      ))
+                    : (MainTitle['Descrip'] = DivExtractionInput(
+                          titleChildren[j]
+                      ))
             }
+            CollectionItem['Title'] = MainTitle
         }
         //설문지의 해당 영역이 item인 녀석들
         if (this.SurveySelectName[1] === className) {
-            const itemChildren = children[i].children;
-            const [itemTop,itemCenter,itemBottom] = itemChildren; 
-            const itemTopChildren = itemTop.children;  
-            const itemCenterchildren = itemCenter.children; 
-            const itemBottomchildren = itemBottom.children; 
-            const SelectedItemValue = itemTopChildren[1].dataset.select;
-            
-            if(SelectedItemValue == undefined){
-                //셀렉트 값이 빈경우
-            }
-            if(SelectedItemValue == 0){
-                //단답형
-                //제목 추출
-                DivExtractionInput(itemTopChildren[0]);
-                //내용 추출
-                DivExtractionInput(itemCenterchildren[0]);
-            }
-            if(SelectedItemValue == 1){
-                //장문형
-                //제목 추출
-                DivExtractionInput(itemTopChildren[0]);
-                //내용 추출
-                DivExtractionInput(itemCenterchildren[0]);
-            }
-            if(SelectedItemValue == 2){
-                for(let k = 0; k<itemCenterchildren.length-1;k++){
-                    if(k === 0){
-                        const item = itemCenterchildren[k].children
-                        const Fitem = item[0].children[0].children[0].children[1]
-                        DivExtractionInput(Fitem);
-                    }else{
-                        const item = itemCenterchildren[k].children
-                        const Fitem = item[0].children[0].children[1];
-                        DivExtractionInput(Fitem);
+            const itemChildren = children[i].children
+            const TempJson = {};
+            if (itemChildren.length === 4) {
+                const [
+                    itemTop,
+                    itemDescrip,
+                    itemCenter,
+                    itemBottom,
+                ] = itemChildren
+                const itemTopChildren = itemTop.children
+                TempJson["Title"] = DivExtractionInput(itemTopChildren[0])
+
+                const itemCenterchildren = itemCenter.children
+                const itemDescripChildren = itemDescrip.children[0];
+                TempJson["Descrip"] = DivExtractionInput(itemDescripChildren,1);
+                const itemBottomchildren = itemBottom.children
+                const SelectedItemValue = itemTopChildren[1].dataset.select
+                if (SelectedItemValue == undefined) {
+                    //셀렉트 값이 빈경우
+                }
+                if (SelectedItemValue == 0) {
+                    //단답형
+                    //제목 추출
+                    //내용 추출
+                    TempJson["Option"] = SelectedItemValue;
+                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
+                }
+                if (SelectedItemValue == 1) {
+                    //장문형
+                    //제목 추출
+                    TempJson["Option"] = SelectedItemValue;
+                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
+                }
+                //라디오 버튼
+                if (SelectedItemValue == 2) {
+                    TempJson["Option"] = SelectedItemValue;
+                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
+                    const TempitemArray = [];
+                    for (let k = 0; k < itemCenterchildren.length - 1; k++) {
+                        if (k === 0) {
+                            const item = itemCenterchildren[k].children
+                            const Fitem =
+                                item[0].children[0].children[0].children[1]
+                            TempitemArray.push(DivExtractionInput(Fitem));
+                        } else {
+                            const item = itemCenterchildren[k].children
+                            const Fitem = item[0].children[0].children[1]
+                            TempitemArray.push(DivExtractionInput(Fitem))
+                        }
+                    }
+                    TempJson["item"] = TempitemArray;
+                }
+                //체크박스
+                if (SelectedItemValue == 3) {
+                    TempJson["Option"] = SelectedItemValue;
+                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
+                    const TempitemArray = [];
+                    for (let k = 0; k < itemCenterchildren.length - 1; k++) {
+                        if (k === 0) {
+                            const item = itemCenterchildren[k].children
+                            const Fitem =
+                                item[0].children[0].children[0].children[1]
+                            TempitemArray(DivExtractionInput(Fitem));
+                        } else {
+                            const item = itemCenterchildren[k].children
+                            const Fitem = item[0].children[0].children[1]
+                            TempitemArray(DivExtractionInput(Fitem))
+                        }
                     }
                 }
+                //그리드
+                if (SelectedItemValue == 4) {
+                    TempJson["Option"] = SelectedItemValue;
+                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
+                    const TempitemArray = {};
+                    const RowArray = [];
+                    const ColumnArray = [];
+                    const SurveyForm = itemCenterchildren[0]
+                    const Row = SurveyForm.children[1].children
+                    const Column = SurveyForm.children[0].children
+                    for (let j = 0; j < Row.length - 1; j++) {
+                        RowArray.push(DivExtractionInput(Row[j].children[1], 1));
+                    }
+                    for (let j = 0; j < Column.length - 1; j++) {
+                        ColumnArray.push(DivExtractionInput(Column[j].children[1], 1));
+                    }
+                    TempitemArray["Row"] = RowArray;
+                    TempitemArray["Column"] = ColumnArray; 
+                    TempJson["item"] = TempitemArray 
+                }
             }
+            if (itemChildren.length === 3) {
+                const [
+                    itemTop,
+                    itemCenter,
+                    itemBottom,
+                ] = itemChildren
+                const itemTopChildren = itemTop.children
+                TempJson["Title"] = DivExtractionInput(itemTopChildren[0])
+
+                const itemCenterchildren = itemCenter.children
+                const itemBottomchildren = itemBottom.children
+                const SelectedItemValue = itemTopChildren[1].dataset.select
+                if (SelectedItemValue == undefined) {
+                    //셀렉트 값이 빈경우
+                }
+                if (SelectedItemValue == 0) {
+                    //단답형
+                    //제목 추출
+                    //내용 추출
+                    TempJson["Option"] = SelectedItemValue;
+                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
+                }
+                if (SelectedItemValue == 1) {
+                    //장문형
+                    //제목 추출
+                    TempJson["Option"] = SelectedItemValue;
+                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
+                }
+                //라디오 버튼
+                if (SelectedItemValue == 2) {
+                    TempJson["Option"] = SelectedItemValue;
+                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
+                    const TempitemArray = [];
+                    for (let k = 0; k < itemCenterchildren.length - 1; k++) {
+                        if (k === 0) {
+                            const item = itemCenterchildren[k].children
+                            const Fitem =
+                                item[0].children[0].children[0].children[1]
+                            TempitemArray.push(DivExtractionInput(Fitem));
+                        } else {
+                            const item = itemCenterchildren[k].children
+                            const Fitem = item[0].children[0].children[1]
+                            TempitemArray.push(DivExtractionInput(Fitem))
+                        }
+                    }
+                    TempJson["item"] = TempitemArray;
+                }
+                //체크박스
+                if (SelectedItemValue == 3) {
+                    TempJson["Option"] = SelectedItemValue;
+                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
+                    const TempitemArray = [];
+                    for (let k = 0; k < itemCenterchildren.length - 1; k++) {
+                        if (k === 0) {
+                            const item = itemCenterchildren[k].children
+                            const Fitem =
+                                item[0].children[0].children[0].children[1]
+                            TempitemArray(DivExtractionInput(Fitem));
+                        } else {
+                            const item = itemCenterchildren[k].children
+                            const Fitem = item[0].children[0].children[1]
+                            TempitemArray(DivExtractionInput(Fitem))
+                        }
+                    }
+                }
+                //그리드
+                if (SelectedItemValue == 4) {
+                    TempJson["Option"] = SelectedItemValue;
+                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
+                    const TempitemArray = {};
+                    const RowArray = [];
+                    const ColumnArray = [];
+                    const SurveyForm = itemCenterchildren[0]
+                    const Row = SurveyForm.children[1].children
+                    const Column = SurveyForm.children[0].children
+                    for (let j = 0; j < Row.length - 1; j++) {
+                        RowArray.push(DivExtractionInput(Row[j].children[1], 1));
+                    }
+                    for (let j = 0; j < Column.length - 1; j++) {
+                        ColumnArray.push(DivExtractionInput(Column[j].children[1], 1));
+                    }
+                    TempitemArray["Row"] = RowArray;
+                    TempitemArray["Column"] = ColumnArray; 
+                    TempJson["item"] = TempitemArray 
+                }
+            }
+            ItemArray.push(TempJson);
         }
     }
+    CollectionItem["item"] = ItemArray;
+    console.log(CollectionItem);
 }
 //Div의 innerHTML 요소를 추출
-const DivExtractionInput = (div,state=0)=>{
-    if(state === 0 ){
-        const {children} = div;
-        const input = children[0];
-        let str = input.value.replace(/(?:\r\n|\r|\n)/g, '<br />');
-        console.log(str);   
-        return str;
+const DivExtractionInput = (div, state = 0) => {
+    if (state === 0) {
+        const { children } = div
+        const input = children[0]
+        let str = input.value.replace(/(?:\r\n|\r|\n)/g, '<br />')
+        return str
     }
-    if(state === 1){
-        const input = div;
-        console.dir(input);
-        let str = input.value.replace(/(?:\r\n|\r|\n)/g, '<br />');
-        console.log(str);   
-        return str;
+    if (state === 1) {
+        const input = div
+        console.dir(input)
+        let str = input.value.replace(/(?:\r\n|\r|\n)/g, '<br />')
+        return str
     }
-
 }
 // 제일 처음 실행어야 하는 함수
 Survey.prototype.createSurvey = function() {
@@ -712,5 +866,4 @@ Survey.prototype.createSurvey = function() {
     console.log(Now.getDate())
     this.createSurveyTitle()
     this.createSurveyTools()
-    this.loadSurvey()
 }
