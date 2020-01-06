@@ -67,7 +67,39 @@ function Survey(container) {
 
     //load전 저장
     this.SurveySelectName = [this.SurveyTitle, this.SurveyItemName]
-    this.SurveyCollection = {}
+    this.SurveyCollection = {
+        Title: { Title: '123', Descrip: '123' },
+        item: [
+            {
+                Title: '단답형',
+                Descrip: '설명',
+                Option: '0',
+                OptionName: '단답형',
+            },
+            {
+                Title: '장문형',
+                Descrip: '장문에 대한 서명을 적어주세요',
+                Option: '1',
+                OptionName: '장문형',
+            },
+            {
+                Title: '객관식 지문입니다.',
+                Option: '2',
+                OptionName: '객관식',
+                item: ['지문1', '지문2', '지문3', '지문4', '지문5'],
+            },
+            { Title: '체크박스테스트', Option: '3', OptionName: '체크박스' },
+            {
+                Title: '직선단계 테스트',
+                Option: '4',
+                OptionName: '직선단계',
+                item: {
+                    Row: ['만족', '불만족'],
+                    Column: ['얼마나 만족', '만족'],
+                },
+            },
+        ],
+    }
 }
 
 //설문지 제목 생성
@@ -657,7 +689,7 @@ Survey.prototype.SaveSurvey = function() {
         //설문지의 해당 영역이 item인 녀석들
         if (this.SurveySelectName[1] === className) {
             const itemChildren = children[i].children
-            const TempJson = {};
+            const TempJson = {}
             if (itemChildren.length === 4) {
                 const [
                     itemTop,
@@ -666,11 +698,11 @@ Survey.prototype.SaveSurvey = function() {
                     itemBottom,
                 ] = itemChildren
                 const itemTopChildren = itemTop.children
-                TempJson["Title"] = DivExtractionInput(itemTopChildren[0])
+                TempJson['Title'] = DivExtractionInput(itemTopChildren[0])
 
                 const itemCenterchildren = itemCenter.children
-                const itemDescripChildren = itemDescrip.children[0];
-                TempJson["Descrip"] = DivExtractionInput(itemDescripChildren,1);
+                const itemDescripChildren = itemDescrip.children[0]
+                TempJson['Descrip'] = DivExtractionInput(itemDescripChildren, 1)
                 const itemBottomchildren = itemBottom.children
                 const SelectedItemValue = itemTopChildren[1].dataset.select
                 if (SelectedItemValue == undefined) {
@@ -680,81 +712,89 @@ Survey.prototype.SaveSurvey = function() {
                     //단답형
                     //제목 추출
                     //내용 추출
-                    TempJson["Option"] = SelectedItemValue;
-                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
+                    TempJson['Option'] = SelectedItemValue
+                    TempJson['OptionName'] = this.SelectOptionText[
+                        SelectedItemValue
+                    ]
                 }
                 if (SelectedItemValue == 1) {
                     //장문형
                     //제목 추출
-                    TempJson["Option"] = SelectedItemValue;
-                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
+                    TempJson['Option'] = SelectedItemValue
+                    TempJson['OptionName'] = this.SelectOptionText[
+                        SelectedItemValue
+                    ]
                 }
                 //라디오 버튼
                 if (SelectedItemValue == 2) {
-                    TempJson["Option"] = SelectedItemValue;
-                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
-                    const TempitemArray = [];
+                    TempJson['Option'] = SelectedItemValue
+                    TempJson['OptionName'] = this.SelectOptionText[
+                        SelectedItemValue
+                    ]
+                    const TempitemArray = []
                     for (let k = 0; k < itemCenterchildren.length - 1; k++) {
                         if (k === 0) {
                             const item = itemCenterchildren[k].children
                             const Fitem =
                                 item[0].children[0].children[0].children[1]
-                            TempitemArray.push(DivExtractionInput(Fitem));
+                            TempitemArray.push(DivExtractionInput(Fitem))
                         } else {
                             const item = itemCenterchildren[k].children
                             const Fitem = item[0].children[0].children[1]
                             TempitemArray.push(DivExtractionInput(Fitem))
                         }
                     }
-                    TempJson["item"] = TempitemArray;
+                    TempJson['item'] = TempitemArray
                 }
                 //체크박스
                 if (SelectedItemValue == 3) {
-                    TempJson["Option"] = SelectedItemValue;
-                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
-                    const TempitemArray = [];
+                    TempJson['Option'] = SelectedItemValue
+                    TempJson['OptionName'] = this.SelectOptionText[
+                        SelectedItemValue
+                    ]
+                    const TempitemArray = []
                     for (let k = 0; k < itemCenterchildren.length - 1; k++) {
                         if (k === 0) {
                             const item = itemCenterchildren[k].children
                             const Fitem =
                                 item[0].children[0].children[0].children[1]
-                            TempitemArray(DivExtractionInput(Fitem));
+                            TempitemArray.push(DivExtractionInput(Fitem))
                         } else {
                             const item = itemCenterchildren[k].children
                             const Fitem = item[0].children[0].children[1]
-                            TempitemArray(DivExtractionInput(Fitem))
+                            TempitemArray.push(DivExtractionInput(Fitem))
                         }
                     }
                 }
                 //그리드
                 if (SelectedItemValue == 4) {
-                    TempJson["Option"] = SelectedItemValue;
-                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
-                    const TempitemArray = {};
-                    const RowArray = [];
-                    const ColumnArray = [];
+                    TempJson['Option'] = SelectedItemValue
+                    TempJson['OptionName'] = this.SelectOptionText[
+                        SelectedItemValue
+                    ]
+                    const TempitemArray = {}
+                    const RowArray = []
+                    const ColumnArray = []
                     const SurveyForm = itemCenterchildren[0]
                     const Row = SurveyForm.children[1].children
                     const Column = SurveyForm.children[0].children
                     for (let j = 0; j < Row.length - 1; j++) {
-                        RowArray.push(DivExtractionInput(Row[j].children[1], 1));
+                        RowArray.push(DivExtractionInput(Row[j].children[1], 1))
                     }
                     for (let j = 0; j < Column.length - 1; j++) {
-                        ColumnArray.push(DivExtractionInput(Column[j].children[1], 1));
+                        ColumnArray.push(
+                            DivExtractionInput(Column[j].children[1], 1)
+                        )
                     }
-                    TempitemArray["Row"] = RowArray;
-                    TempitemArray["Column"] = ColumnArray; 
-                    TempJson["item"] = TempitemArray 
+                    TempitemArray['Row'] = RowArray
+                    TempitemArray['Column'] = ColumnArray
+                    TempJson['item'] = TempitemArray
                 }
             }
             if (itemChildren.length === 3) {
-                const [
-                    itemTop,
-                    itemCenter,
-                    itemBottom,
-                ] = itemChildren
+                const [itemTop, itemCenter, itemBottom] = itemChildren
                 const itemTopChildren = itemTop.children
-                TempJson["Title"] = DivExtractionInput(itemTopChildren[0])
+                TempJson['Title'] = DivExtractionInput(itemTopChildren[0])
 
                 const itemCenterchildren = itemCenter.children
                 const itemBottomchildren = itemBottom.children
@@ -766,78 +806,89 @@ Survey.prototype.SaveSurvey = function() {
                     //단답형
                     //제목 추출
                     //내용 추출
-                    TempJson["Option"] = SelectedItemValue;
-                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
+                    TempJson['Option'] = SelectedItemValue
+                    TempJson['OptionName'] = this.SelectOptionText[
+                        SelectedItemValue
+                    ]
                 }
                 if (SelectedItemValue == 1) {
                     //장문형
                     //제목 추출
-                    TempJson["Option"] = SelectedItemValue;
-                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
+                    TempJson['Option'] = SelectedItemValue
+                    TempJson['OptionName'] = this.SelectOptionText[
+                        SelectedItemValue
+                    ]
                 }
                 //라디오 버튼
                 if (SelectedItemValue == 2) {
-                    TempJson["Option"] = SelectedItemValue;
-                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
-                    const TempitemArray = [];
+                    TempJson['Option'] = SelectedItemValue
+                    TempJson['OptionName'] = this.SelectOptionText[
+                        SelectedItemValue
+                    ]
+                    const TempitemArray = []
                     for (let k = 0; k < itemCenterchildren.length - 1; k++) {
                         if (k === 0) {
                             const item = itemCenterchildren[k].children
                             const Fitem =
                                 item[0].children[0].children[0].children[1]
-                            TempitemArray.push(DivExtractionInput(Fitem));
+                            TempitemArray.push(DivExtractionInput(Fitem))
                         } else {
                             const item = itemCenterchildren[k].children
                             const Fitem = item[0].children[0].children[1]
                             TempitemArray.push(DivExtractionInput(Fitem))
                         }
                     }
-                    TempJson["item"] = TempitemArray;
+                    TempJson['item'] = TempitemArray
                 }
                 //체크박스
                 if (SelectedItemValue == 3) {
-                    TempJson["Option"] = SelectedItemValue;
-                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
-                    const TempitemArray = [];
+                    TempJson['Option'] = SelectedItemValue
+                    TempJson['OptionName'] = this.SelectOptionText[
+                        SelectedItemValue
+                    ]
+                    const TempitemArray = []
                     for (let k = 0; k < itemCenterchildren.length - 1; k++) {
                         if (k === 0) {
                             const item = itemCenterchildren[k].children
                             const Fitem =
                                 item[0].children[0].children[0].children[1]
-                            TempitemArray(DivExtractionInput(Fitem));
+                            TempitemArray.push(DivExtractionInput(Fitem))
                         } else {
                             const item = itemCenterchildren[k].children
                             const Fitem = item[0].children[0].children[1]
-                            TempitemArray(DivExtractionInput(Fitem))
+                            TempitemArray.push(DivExtractionInput(Fitem))
                         }
                     }
                 }
                 //그리드
                 if (SelectedItemValue == 4) {
-                    TempJson["Option"] = SelectedItemValue;
-                    TempJson["OptionName"] = this.SelectOptionText[SelectedItemValue];
-                    const TempitemArray = {};
-                    const RowArray = [];
-                    const ColumnArray = [];
+                    TempJson['Option'] = SelectedItemValue
+                    TempJson['OptionName'] = this.SelectOptionText[
+                        SelectedItemValue
+                    ]
+                    const TempitemArray = {}
+                    const RowArray = []
+                    const ColumnArray = []
                     const SurveyForm = itemCenterchildren[0]
                     const Row = SurveyForm.children[1].children
                     const Column = SurveyForm.children[0].children
                     for (let j = 0; j < Row.length - 1; j++) {
-                        RowArray.push(DivExtractionInput(Row[j].children[1], 1));
+                        RowArray.push(DivExtractionInput(Row[j].children[1], 1))
                     }
                     for (let j = 0; j < Column.length - 1; j++) {
-                        ColumnArray.push(DivExtractionInput(Column[j].children[1], 1));
+                        ColumnArray.push(
+                            DivExtractionInput(Column[j].children[1], 1)
+                        )
                     }
-                    TempitemArray["Row"] = RowArray;
-                    TempitemArray["Column"] = ColumnArray; 
-                    TempJson["item"] = TempitemArray 
+                    TempitemArray['Row'] = RowArray
+                    TempitemArray['Column'] = ColumnArray
+                    TempJson['item'] = TempitemArray
                 }
             }
-            ItemArray.push(TempJson);
+            ItemArray.push(TempJson)
         }
     }
-    CollectionItem["item"] = ItemArray;
-    console.log(CollectionItem);
+    CollectionItem['item'] = ItemArray
 }
 //Div의 innerHTML 요소를 추출
 const DivExtractionInput = (div, state = 0) => {
@@ -854,16 +905,18 @@ const DivExtractionInput = (div, state = 0) => {
         return str
     }
 }
+
+//JSON데이터 로딩 함수
+Survey.prototype.loadSurvey = function(){
+    console.log(this.SurveyCollection);
+    const data = JSON.parse(this.SurveyCollection);
+    console.dir(data);
+}
 // 제일 처음 실행어야 하는 함수
 Survey.prototype.createSurvey = function() {
     //설문지의 이름 제작
-    const Now = new Date()
-    console.log(Now.getFullYear())
-    console.log(Now.getMonth() + 1)
-    console.log(Now.getDay())
-
-    console.log(Now.getSeconds())
-    console.log(Now.getDate())
+   
     this.createSurveyTitle()
     this.createSurveyTools()
+    this.loadSurvey();
 }
