@@ -1,61 +1,104 @@
-function UserForm(container,Collection){
-    this.Container = container;
-    this.Collection = Collection;
-    this.ItemDiv = "FormItem";
-    this.ItemTopDiv = "FormItemTop";
-    this.ItemCenterDiv = "FormItemCenter";
-    this.ItemTitle = "FormtItemTitle";
-    this.ItemDescript = "FormItemDescrip";
-    //material pannel 
+function UserForm(container, Collection) {
+    this.Container = container
+    this.Collection = Collection
+    this.ItemDiv = 'FormItem'
+    this.ItemTopDiv = 'FormItemTop'
+    this.ItemCenterDiv = 'FormItemCenter'
+    this.ItemTitle = 'FormtItemTitle'
+    this.ItemDescript = 'FormItemDescrip'
+    //material pannel
     this.MaterialPanel = 'mui-panel'
-    this.MaterialInput = 'input-field'   
+    this.MaterialInput = 'input-field'
     this.MaterialTextArea = 'materialize-textarea'
 }
 
+UserForm.prototype.createItem = function() {
+    const { item } = this.Collection
+    console.log(item)
 
-UserForm.prototype.createItem = function(){
-    const {item} = this.Collection;
-    console.log(item);
+    item.map(index => {
+        const Tag = createDivTag([this.MaterialPanel])
+        console.log(index)
+        const Top = createDivTag([this.ItemTitle])
+        const Text = createSpanTag([this.ItemTitle], index.Title)
+        Text.appendChild(document.createElement('br'))
+        Top.appendChild(Text)
+        if (index.Descrip !== undefined) {
+            const Descript = createSpanTag([this.ItemDescript], index.Descrip)
+            Descript.appendChild(document.createElement('br'))
+            Top.appendChild(Descript)
+        }
+        const Center = createDivTag([this.ItemCenterDiv])
+        if (index.Option == 0 || index.Option == 1) {
+            const inputDiv = createDivTag([this.MaterialInput])
+            const input = createInput()
+            inputDiv.appendChild(input)
+            Center.appendChild(inputDiv)
+        }
+        if (index.Option == 2) {
+            const RadioDiv = createDivTag([this.MaterialInput])
+            const RadioForm = document.createElement('form');
 
-    item.map((index)=>{
-        const Tag = createDivTag([this.MaterialPanel]);
-        console.log(index);
-        const Top = createDivTag([this.ItemTitle]);
-        const Text = createSpanTag([this.ItemTitle],index.Title);
-        Text.appendChild(document.createElement("br"));
-        Top.appendChild(Text);
-        if(index.Descrip !== undefined){
-            const Descript = createSpanTag([this.ItemDescript],index.Descrip);
-            Descript.appendChild(document.createElement("br"));
-            Top.appendChild(Descript);
-            
+            createRadioTag([], index.item, RadioForm);
+            RadioDiv.appendChild(RadioForm);
+            Center.appendChild(RadioDiv)
         }
-        const Center = createDivTag([this.ItemCenterDiv]);
-        if(index.Option == 0 || index.Option == 1){
-            const inputDiv = createDivTag([this.MaterialInput]);
-            const input = createInput();
-            inputDiv.appendChild(input);
-            Center.appendChild(inputDiv);
-        }
-        if(index.Option == 2){
-            const RadioDiv =createDivTag([this.MaterialInput]);
-            createRadioTag([],index.item,RadioDiv);
-            Center.appendChild(RadioDiv);
-        }
-        Tag.appendChild(Top);
-        Tag.appendChild(Center);
-        this.Container.appendChild(Tag);
-        
+        if(index.Option == 4){
+            const TableForm = document.createElement('form');
+            const TableDiv = createDivTag([this.MaterialInput]);
+            const TableTag = document.createElement('table');
+            const {Row} = index.item;
+            const {Column} = index.item;
+            console.log(Row);
+            console.log(Column);
+            const TheadTag = document.createElement('thead');
+            const TbodyTag = document.createElement('tbody');
+            const TheadTrTag = document.createElement('tr');
+            Row.map((index,position)=>{
+                if(position === 0){
+                    const TdTag = document.createElement('td');
+                    TdTag.appendChild(document.createTextNode("#"));
+                    TheadTrTag.appendChild(TdTag);
+                }
+                const TdTag = document.createElement('td');
+                TdTag.appendChild(document.createTextNode(index));
+                TheadTrTag.appendChild(TdTag);
+            })
+            Column.map((index,position)=>{
+                const ColumnTrTag = document.createElement('tr');
+                const TdTag = document.createElement('td').appendChild(document.createTextNode(index));
+                ColumnTrTag.appendChild(TdTag);
+                for(let i = 0; i<Row.length;i++){
+                    const ColumnTdTag = document.createElement('td');
+                    const label =document.createElement('label');
+                    const RadioTag = document.createElement('input');
+                    const SpanTag = document.createElement('span');
+                    RadioTag.setAttribute('type','radio');
+                    RadioTag.setAttribute('name','form');
+                    label.appendChild(RadioTag);
+                    label.appendChild(SpanTag);
+                    ColumnTdTag.appendChild(label);
+                    ColumnTrTag.appendChild(ColumnTdTag)
+                }
+                TbodyTag.appendChild(ColumnTrTag);
+            })
+            TheadTag.appendChild(TheadTrTag);
+            TableTag.appendChild(TheadTrTag);
+            TableTag.appendChild(TbodyTag);
+            TableDiv.appendChild(TableTag);
+            TableForm.appendChild(TableDiv);
+            Center.appendChild(TableForm);
 
+        }
+        Tag.appendChild(Top)
+        Tag.appendChild(Center)
+        this.Container.appendChild(Tag)
     })
-};
-
-UserForm.prototype.init = function(){
-    this.createItem();
 }
 
-
-
+UserForm.prototype.init = function() {
+    this.createItem()
+}
 
 //공통태그영영
 const createDivTag = divName => {
@@ -64,11 +107,11 @@ const createDivTag = divName => {
     return DivTag
 }
 //span생성
-const createSpanTag = (spanName,Text)=>{
-    const SpanTag = document.createElement('span');
-    spanName.map(index=>SpanTag.classList.add(index));
-    SpanTag.appendChild(document.createTextNode(Text));
-    return SpanTag;
+const createSpanTag = (spanName, Text) => {
+    const SpanTag = document.createElement('span')
+    spanName.map(index => SpanTag.classList.add(index))
+    SpanTag.appendChild(document.createTextNode(Text))
+    return SpanTag
 }
 
 const createIconButton = (IconButtonName, IconText, IconState = null) => {
@@ -88,14 +131,14 @@ const createIconButton = (IconButtonName, IconText, IconState = null) => {
 const createInput = (
     InputName,
     type = 'text',
-    text = "",
+    text = '',
     placeholder = '입력해주세요'
 ) => {
     //input TextName을 생성합시당
     const InputTag = document.createElement('input')
     InputTag.setAttribute('type', type)
     InputTag.setAttribute('placeholder', placeholder)
-    InputTag.setAttribute('value',text);
+    InputTag.setAttribute('value', text)
     if (typeof InputName === 'string') {
         InputTag.classList.add(InputName)
     } else if (InputName !== null && InputName !== undefined) {
@@ -103,10 +146,10 @@ const createInput = (
     }
     return InputTag
 }
-const createTextArea = (TextAreaName, placeholder,text="") => {
+const createTextArea = (TextAreaName, placeholder, text = '') => {
     const TextAreaTag = document.createElement('textarea')
     TextAreaTag.setAttribute('placeholder', placeholder)
-    TextAreaTag.innerHTML=text;
+    TextAreaTag.innerHTML = text
     TextAreaName.map(index => TextAreaTag.classList.add(index))
     return TextAreaTag
 }
@@ -127,20 +170,19 @@ const createSelectTag = (SelectName, ListName) => {
 }
 
 const createRadioTag = (RadioName, Text, AllRadioForm) => {
-    
-    Text.map((index)=>{
+    Text.map(index => {
         const RadioTag = document.createElement('input')
         const LabelTag = document.createElement('label')
-        const spanTag = document.createElement('span');
-        spanTag.appendChild(document.createTextNode(index));
+        const spanTag = document.createElement('span')
+        spanTag.appendChild(document.createTextNode(index))
         RadioTag.setAttribute('type', 'radio')
         RadioName.map(index => RadioTag.classList.add(index))
+        RadioTag.setAttribute('name','form');
         LabelTag.appendChild(RadioTag)
-        LabelTag.appendChild(spanTag);
-        AllRadioForm.appendChild(LabelTag);
-    })
-   
+        LabelTag.appendChild(spanTag)
+        AllRadioForm.appendChild(LabelTag)
     
+    })
 }
 
 const createCheckTag = (CheckName, Text, AllRadioForm) => {
