@@ -47,7 +47,7 @@ function Survey(container) {
 
     //material 태그 적용
     this.MaterialPanel = 'mui-panel'
-    this.MaterialInput = 'input-field'
+    this.MaterialInput = 'input-field'   
     this.MaterialTextArea = 'materialize-textarea'
 
     //SelectTag 제목 텍스트
@@ -914,7 +914,7 @@ const DivExtractionInput = (div, state = 0) => {
     }
 }
 
-//JSON데이터 로딩 함수
+//JSON데이터 저장 함수
 Survey.prototype.loadSurvey = function(){
     const {Title} = this.SurveyCollection;
     console.log(Title.Descrip);

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://cdn.muicss.com/mui-latest/css/mui.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.muicss.com/mui-latest/js/mui.min.js"></script> 
+
+    <!--Materal icon-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        
+    </style>
+</head>
+<body>
+    <div class = "container">
+
+    </div>
+
+    <script src="modules/Form.js"></script>
+    <script>
+        const container = document.querySelectorAll(".container")[0];
+        SurveyCollection = {
+        Title: { Title: '123', Descrip: '123' },
+        item: [
+            {
+                Title: '단답형',
+                Descrip: '설명',
+                Option: '0',
+                OptionName: '단답형',
+            },
+            {
+                Title: '장문형',
+                Descrip: '장문에 대한 서명을 적어주세요',
+                Option: '1',
+                OptionName: '장문형',
+            },
+            {
+                Title: '객관식 지문입니다.',
+                Option: '2',
+                OptionName: '객관식',
+                item: ['지문1', '지문2', '지문3', '지문4', '지문5'],
+            },
+            { Title: '체크박스테스트', Option: '3', OptionName: '체크박스' },
+            {
+                Title: '직선단계 테스트',
+                Option: '4',
+                OptionName: '직선단계',
+                item: {
+                    Row: ['만족', '불만족'],
+                    Column: ['얼마나 만족', '만족'],
+                },
+            },
+        ],
+    }
+    console.log(SurveyCollection);
+    UserForm = new UserForm(container,SurveyCollection);
+    UserForm.init();
+    </script>
+</body>
+</html>
