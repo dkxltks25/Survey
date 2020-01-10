@@ -16,7 +16,12 @@
     <!--Materal icon-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        
+        body{
+            background-color:#efefef;
+        }
+        .container{
+            margin-top:100px;
+        }
     </style>
 </head>
 <body>
@@ -26,41 +31,59 @@
 
     <script src="modules/Form.js"></script>
     <script>
-        const container = document.querySelectorAll(".container")[0];
-        SurveyCollection = {
-        Title: { Title: '123', Descrip: '123' },
-        item: [
+        var container = document.querySelectorAll(".container")[0];
+        var SurveyCollection = {
+        "Title": { "Title": "123", "Descrip": "123" },
+        "item": [
             {
-                Title: '단답형',
-                Descrip: '설명',
-                Option: '0',
-                OptionName: '단답형',
+                "Title": "단답형",
+                "Descrip": "설명",
+                "Option": "0",
+                "OptionName": "단답형",
             },
             {
-                Title: '장문형',
-                Descrip: '장문에 대한 서명을 적어주세요',
-                Option: '1',
-                OptionName: '장문형',
+                "Title": "장문형",
+                "Descrip": "장문에 대한 서명을 적어주세요",
+                "Option": "1",
+                "OptionName": "장문형",
             },
             {
-                Title: '객관식 지문입니다.',
-                Option: '2',
-                OptionName: '객관식',
-                item: ['지문1', '지문2', '지문3', '지문4', '지문5'],
+                "Title": "장문형",
+                "Descrip": "장문에 대한 서명을 적어주세요",
+                "Option": "1",
+                "OptionName": "장문형",
             },
-            { Title: '체크박스테스트', Option: '3', OptionName: '체크박스' },
             {
-                Title: '직선단계 테스트',
-                Option: '4',
-                OptionName: '직선단계',
-                item: {
-                    Row: ['만족', '불만족'],
-                    Column: ['얼마나 만족', '만족'],
-                },
+                "Title": "객관식 지문입니다.",
+                "Option": "2",
+                "OptionName": "객관식",
+                "item": ["지문1", "지문2", "지문3", "지문4", "지문5"],
             },
-        ],
+            { "Title": "체크박스테스트", "Option": "3", "OptionName": "체크박스" },
+            {
+                "Title": "직선단계 테스트",
+                "Option": "4",
+                "OptionName": "직선단계",
+                "item": {
+                    "Row": ["만족", "불만족"],
+                    "Column": ["얼마나 만족", "만족"],
+                }
+            },
+            {
+                "Title": "직선단계 테스트",
+                "Option": "4",
+                "OptionName": "직선단계",
+                "item": {
+                    "Row": ["만족", "불만족","싫어","꺼져","내가 왜"],
+                    "Column": ["얼마나 만족", "만족","너의 상태는?"],
+                }
+            }
+        
+        ]
     }
-    console.log(SurveyCollection);
+    var params = {};
+    //window.decodeURI(window.location.search).replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; })
+    //return params;
     UserForm = new UserForm(container,SurveyCollection);
     UserForm.init();
     </script>
