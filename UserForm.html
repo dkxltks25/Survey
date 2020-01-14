@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://cdn.muicss.com/mui-latest/css/mui.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.muicss.com/mui-latest/js/mui.min.js"></script>
+    <!--Materal icon-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: table;
+            margin: 0px auto;
+            background-color: #efefef;
+        }
+
+        .containerWrap {
+            display: table-cell;
+            vertical-align: middle;
+            height: 100%;
+        }
+
+        .container {
+            min-width: 800px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="containerWrap">
+        <div class="container mui-panel">
+            <div class = "Item">
+                <blockquote>
+                    설문지명:2020학년도 신입생 대상<br>
+                    설문지 실시일 :2020-01-15 ~ 2020-01-22<br>
+                    해당 내용은 자동 저장되어 있으니 전송 전까지 자유롭게 작성이 가능합니다.
+                </blockquote>
+            </div>
+            <div class="SurveyBottom">
+                <button class="btn waves-effect waves-light" type="button" id = "saveBtn"name="click">설문지 저장
+                    <i class="material-icons right">send</i>
+                </button>
+                <button class="btn waves-effect waves-light leftBtn" type="button" name="click">이전작성보기
+                    <i class="material-icons right">navigate_before</i>
+                </button>
+                <button class="btn waves-effect waves-light RightBtn" type="button" name="click">작성완료
+                    <i class="material-icons right">navigate_next</i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="modules/UserForm.js"></script>
+    <script>
+        const container = document.querySelectorAll('.container')[0];
+        const Collection = {
+            Title: { Title: '123', Descrip: '123' },
+            item: [
+                {
+                    Title: '단답형',
+                    Descrip: '설명',
+                    Option: '0',
+                    OptionName: '단답형',
+                },
+                {
+                    Title: '장문형',
+                    Descrip: '장문에 대한 서명을 적어주세요',
+                    Option: '1',
+                    OptionName: '장문형',
+                },
+                {
+                    Title: '객관식 지문입니다.',
+                    Option: '2',
+                    OptionName: '객관식',
+                    item: ['지문1', '지문2', '지문3', '지문4', '지문5'],
+                },
+                { Title: '체크박스테스트', Option: '3', OptionName: '체크박스' },
+                {
+                    Title: '직선단계 테스트',
+                    Option: '4',
+                    OptionName: '직선단계',
+                    item: {
+                        Row: ['만족', '불만족'],
+                        Column: ['얼마나 만족', '만족'],
+                    },
+                },
+            ],
+        }
+        const userform = new UserForm(container, Collection);
+        userform.init();
+    </script>
+</body>
+
+</html>
