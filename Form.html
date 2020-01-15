@@ -31,6 +31,8 @@
 
     <script src="modules/Form.js"></script>
     <script>
+       // var Test  {"Title":{"Title":"Test","Descrip":"123"},"item":[{"Title":null,"Descrip":null,"Option":"2","OptionName":"객관식1","item":[]},{"Title":null,"Descrip":null,"Option":"3","OptionName":"객관식2","item":[]}]}
+
         var container = document.querySelectorAll(".container")[0];
         var SurveyCollection = {
         "Title": { "Title": "123", "Descrip": "123" },
@@ -82,9 +84,10 @@
         ]
     }
     var params = {};
-    //window.decodeURI(window.location.search).replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; })
+    window.decodeURI(window.location.search).replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; })
+    console.log(params);
     //return params;
-    UserForm = new UserForm(container,SurveyCollection);
+    UserForm = new UserForm(container,JSON.parse(params.Collection));
     UserForm.init();
     </script>
 </body>
