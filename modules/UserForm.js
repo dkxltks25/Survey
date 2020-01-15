@@ -189,10 +189,22 @@ UserForm.prototype.createTableAnswer = function (index, value = null) {
 UserForm.prototype.init = function () {
     this.ReadData();
     const saveBtn = document.querySelector("#saveBtn");
+
+    //저장기능
     saveBtn.addEventListener('click',()=>{
         for(let i = 1; i<this.groupCount;i++){
             const Names = document.getElementsByName(this.groupId+i);
-            console.dir(Names);
+            for(let j = 0; j<Names.length;j++){
+                
+                if(Names.length === 1){
+                    console.log("장문 혹은 답답에 대한 응답"+Names[j].value);
+                }else{
+                    if(Names[j].checked === true){
+                        console.log(Names[j]);
+                    }
+                }
+                
+            }
         }
     })
 }
